@@ -1,13 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading;
-using System.Threading.Tasks;
-using Detector.EpisodeStorage.Common;
+﻿using Detector.EpisodeStorage.Common;
 using Detector.EpisodeStorage.DetectedDB;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Detector.EpisodeStorage.ScreenShotDB
 {
