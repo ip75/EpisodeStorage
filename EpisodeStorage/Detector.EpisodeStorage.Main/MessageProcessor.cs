@@ -1,31 +1,40 @@
 ﻿using System;
+using System.IO;
+using System.Text;
+using System.Text.Json;
+using Detector.EpisodeStorage.ScreenShotDB;
+using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using NetMQ;
+using Detector.EpisodeStorage.Main.Operations;
 
 namespace Detector.EpisodeStorage.Main
 {
     public class MessageProcessor : IHostedService
     {
-        public MessageProcessor()
+        private readonly FileStorage _fileStorage;
+
+        public MessageProcessor(FileStorage fileStorage)
         {
-            
+            _fileStorage = fileStorage;
         }
 
-        public string ProcessMessage(long episodeId, string message)
+        public async Task<string> ProcessMessage(long episodeId, string message)
         {
-            return string.Empty;
+            var directory = _fileStorage.CreateNewEventDirectory(DateTime.Now);
+            var operation = await JsonSerializer.DeserializeAsync<StoreFileOperation>(new MemoryStream(Encoding.UTF8.GetBytes(message)));
+            await directory.StoreFile(operation.FileName, operation.Data);
+            return JsonSerializer.Serialize(new OperationResult { Result = "OK"});
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

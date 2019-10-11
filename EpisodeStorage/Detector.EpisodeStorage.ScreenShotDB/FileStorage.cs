@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
 using System.Threading.Tasks;
 using Detector.EpisodeStorage.Common;
+using Detector.EpisodeStorage.DetectedDB;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -11,30 +14,37 @@ namespace Detector.EpisodeStorage.ScreenShotDB
     public class FileStorage
     {
         private readonly ILogger<FileStorage> _logger;
+        private readonly IOptions<Config> _config;
+        private readonly GlobalSettingsStorage _storage;
         private const string DateDirectoryFormat = "yyyy.MM.dd";
         /// <summary>
         /// Root directory of file storage
         /// </summary>
         private readonly DirectoryInfo _root;
 
-        public FileStorage(ILogger<FileStorage> logger, IOptions<Config> config)
+        public FileStorage(ILogger<FileStorage> logger, IOptions<Config> config, GlobalSettingsStorage storage)
         {
             _logger = logger;
+            _config = config;
+            _storage = storage;
             this._root = new DirectoryInfo(config.Value.RootDirectory);
         }
 
-        public DirectoryInfo CreateNewEventDirectory(DateTime dateTime)
+        public EpisodeDirectory CreateNewEventDirectory(DateTime dateTime)
         {
+            _config.Value.TimeoutMessageProcessing = 100;
+            var newEpisodeId = _storage.Settings.EpisodeId++;
+
             var newEventDirectory = Path.Combine(
                 _root.FullName,
                 dateTime.ToString(format: DateDirectoryFormat),
                 dateTime.ToString("HH"),
                 $"{dateTime.Minute/10*10:00}",
-                dateTime.ToString("HH.mm.ss.sss"));
+                newEpisodeId.ToString() ); // dateTime.ToString("HH.mm.ss.sss")
 
             _logger.LogDebug($"Creating new event directory {newEventDirectory} ...");
 
-            return Directory.CreateDirectory(newEventDirectory);
+            return new EpisodeDirectory {EpisodeId = newEpisodeId, Directory = Directory.CreateDirectory(newEventDirectory)};
         }
 
         public void Clean(TimeSpan keepPeriod)
@@ -42,7 +52,6 @@ namespace Detector.EpisodeStorage.ScreenShotDB
             var edgeTime = DateTime.Now - keepPeriod;
             try
             {
-
                 // delete expired directories with contained files asynchronously in different tasks
                 // 1. delete recursively previous days.
                 _root.GetDirectories(searchPattern: "*", searchOption: SearchOption.TopDirectoryOnly)

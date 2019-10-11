@@ -1,26 +1,35 @@
-﻿using System;
+﻿using Detector.Common;
+using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Detector.Common;
-using Microsoft.Extensions.Hosting;
 
 namespace Detector.EpisodeStorage.DetectedDB
 {
+    /// <summary>
+    /// database storage service
+    /// </summary>
     public class Service : IHostedService, IDisposable, ICleaner
     {
+        private readonly GlobalSettingsStorage _settingsStorage;
+
+        public Service(GlobalSettingsStorage settingsStorage)
+        {
+            _settingsStorage = settingsStorage;
+        }
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
 
         public TimeSpan KeepPeriod { get; set; }
@@ -29,7 +38,6 @@ namespace Detector.EpisodeStorage.DetectedDB
         /// </summary>
         public void Clean()
         {
-            throw new NotImplementedException();
         }
     }
 }

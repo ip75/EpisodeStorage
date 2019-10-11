@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Threading.Tasks;
 using Detector.EpisodeStorage.Common;
+using Detector.EpisodeStorage.DetectedDB;
 
 namespace Detector.EpisodeStorage.Main
 {
@@ -33,10 +34,10 @@ namespace Detector.EpisodeStorage.Main
                     services.AddSingleton<IHostedService, ScreenShotDB.Service>();
                     services.AddSingleton<IHostedService, DetectedDB.Service>();
                     services.AddSingleton<IHostedService, Transceiver>();
+                    services.AddSingleton<IHostedService, GlobalSettingsStorage>();
                     
                     services.AddHostedService<MessageProcessor>();
-                    
-                    
+
                     services.AddScoped<ScreenShotDB.FileStorage>();
                 })
                 .ConfigureLogging( configureLogging: (hostingContext, logging) =>
@@ -50,7 +51,6 @@ namespace Detector.EpisodeStorage.Main
                 .UseSerilog();
 
             await builder.RunConsoleAsync();
-
         }
     }
 }

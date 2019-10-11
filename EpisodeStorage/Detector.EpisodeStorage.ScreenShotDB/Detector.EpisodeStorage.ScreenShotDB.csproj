@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Detector.Common\Detector.Common.csproj" />
     <ProjectReference Include="..\Detector.EpisodeStorage.Common\Detector.EpisodeStorage.Common.csproj" />
+    <ProjectReference Include="..\Detector.EpisodeStorage.DetectedDB\Detector.EpisodeStorage.DetectedDB.csproj" />
   </ItemGroup>
 
 </Project>
