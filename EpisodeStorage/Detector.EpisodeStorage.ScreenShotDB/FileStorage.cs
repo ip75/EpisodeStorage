@@ -18,14 +18,14 @@ namespace Detector.EpisodeStorage.ScreenShotDB
         /// <summary>
         /// Root directory of file storage
         /// </summary>
-        private readonly DirectoryInfo _root;
+        private DirectoryInfo _root;
 
         public FileStorage(ILogger<FileStorage> logger, IOptions<Config> config, GlobalSettingsStorage storage)
         {
             _logger = logger;
             _config = config;
             _storage = storage;
-            this._root = new DirectoryInfo(config.Value.RootDirectory);
+            _root = new DirectoryInfo(_config.Value.RootDirectory);
         }
 
         public EpisodeDirectory CreateNewEventDirectory(DateTime dateTime)

@@ -31,14 +31,14 @@ namespace Detector.EpisodeStorage.Main
                     services.Configure<Config>(hostContext.Configuration.GetSection("Lightener"));
                     services.Configure<Config>(hostContext.Configuration.GetSection("Transmitter"));
 
-                    services.AddSingleton<IHostedService, ScreenShotDB.Service>();
-                    services.AddSingleton<IHostedService, DetectedDB.Service>();
-                    services.AddSingleton<IHostedService, Transceiver>();
-                    services.AddSingleton<IHostedService, GlobalSettingsStorage>();
-                    
-                    services.AddHostedService<MessageProcessor>();
+                    //services.AddHostedService<GlobalSettingsStorage>();
+                    services.AddSingleton<GlobalSettingsStorage>();
+                    services.AddSingleton<ScreenShotDB.FileStorage>();
+                    services.AddScoped<MessageProcessor>();
 
-                    services.AddScoped<ScreenShotDB.FileStorage>();
+                    services.AddHostedService<Transceiver>();
+                    services.AddHostedService<ScreenShotDB.Service>();
+                    services.AddHostedService<DetectedDB.Service>();
                 })
                 .ConfigureLogging( configureLogging: (hostingContext, logging) =>
                 {

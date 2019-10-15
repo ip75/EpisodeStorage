@@ -29,6 +29,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Detector.Common\Detector.Common.csproj" />
+    <ProjectReference Include="..\Detector.EpisodeStorage.Common\Detector.EpisodeStorage.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DetectedDB.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
