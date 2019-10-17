@@ -8,8 +8,7 @@
     "KeyPath": "\\keys\\certificate_with_private.cer"
   },
   "Transmitter": {
-    "ZeroMQRouter": "@tcp://127.0.0.1:10000",
-    "TimeoutMessageProcessing" : -1 /* in milliseconds. -1 infinite*/
+    "ZeroMQRouter": "@tcp://127.0.0.1:10000"
   },
 
   // lightener configuration

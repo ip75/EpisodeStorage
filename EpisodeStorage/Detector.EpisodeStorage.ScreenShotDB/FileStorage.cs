@@ -28,21 +28,18 @@ namespace Detector.EpisodeStorage.ScreenShotDB
             _root = new DirectoryInfo(_config.Value.RootDirectory);
         }
 
-        public EpisodeDirectory CreateNewEventDirectory(DateTime dateTime)
+        public EpisodeDirectory CreateNewEventDirectory(ulong episodeId, DateTime dateTime)
         {
-            _config.Value.TimeoutMessageProcessing = 100;
-            var newEpisodeId = _storage.Settings.EpisodeId++;
-
             var newEventDirectory = Path.Combine(
                 _root.FullName,
                 dateTime.ToString(format: DateDirectoryFormat),
                 dateTime.ToString("HH"),
                 $"{dateTime.Minute/10*10:00}",
-                newEpisodeId.ToString() ); // dateTime.ToString("HH.mm.ss.sss")
+                episodeId.ToString() ); // dateTime.ToString("HH.mm.ss.sss")
 
             _logger.LogDebug($"Creating new event directory {newEventDirectory} ...");
 
-            return new EpisodeDirectory {EpisodeId = newEpisodeId, Directory = Directory.CreateDirectory(newEventDirectory)};
+            return new EpisodeDirectory {EpisodeId = episodeId, Directory = Directory.CreateDirectory(newEventDirectory)};
         }
 
         public void Clean(TimeSpan keepPeriod)

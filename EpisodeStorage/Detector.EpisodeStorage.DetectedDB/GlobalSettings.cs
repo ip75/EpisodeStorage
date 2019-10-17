@@ -2,6 +2,12 @@
 {
     public class GlobalSettings
     {
-        public ulong EpisodeId {get; set;}
+        private ulong _episodeId;
+
+        public ulong EpisodeId
+        {
+            get => _episodeId++;
+            set => _episodeId = value;
+        }
     }
 }

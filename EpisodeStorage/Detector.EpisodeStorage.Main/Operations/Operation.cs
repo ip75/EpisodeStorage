@@ -5,6 +5,6 @@
         /// <summary>
         /// Operation name
         /// </summary>
-        public string Name { get; set; }
+        public string Command { get; set; }
     }
 }

@@ -17,14 +17,15 @@ namespace Detector.EpisodeStorage.Main
             _fileStorage = fileStorage;
         }
 
-        public async Task<string> ProcessMessage(long episodeId, string message)
+        public async Task<string> ProcessMessage(ulong episodeId, string commandName, string message)
         {
-            var directory = _fileStorage.CreateNewEventDirectory(DateTime.Now);
-            var operation = await JsonSerializer.DeserializeAsync<StoreFileOperation>(new MemoryStream(Encoding.UTF8.GetBytes(message)));
+            var directory = _fileStorage.CreateNewEventDirectory(episodeId, DateTime.Now);
+            var operation = await JsonSerializer.DeserializeAsync<StoreFileOperation>(
+                    new MemoryStream(Encoding.UTF8.GetBytes(message)));
 
             await directory.StoreFile(operation.FileName, operation.Data);
 
-            return JsonSerializer.Serialize(new OperationResult { Result = "OK"});
+            return JsonSerializer.Serialize(new OperationResult {Result = "Success"});
         }
     }
 }

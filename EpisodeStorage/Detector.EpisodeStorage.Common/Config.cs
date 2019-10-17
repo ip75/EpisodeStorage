@@ -15,7 +15,6 @@
         /// Transceiver
         /// </summary>
         public string ZeroMQRouter { get; set; }
-        public int TimeoutMessageProcessing { get; set; }
 
         /// <summary>
         /// Lightener section

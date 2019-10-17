@@ -15,11 +15,15 @@ namespace Detector.EpisodeStorage.ScreenShotDB
         }
         public async Task StoreFile(string fileName, byte [] data)
         {
-            await File.Create(Path.Combine(Directory.FullName, fileName)).WriteAsync(data);
+            await using var file = File.Open(Path.Combine(Directory.FullName, fileName), FileMode.OpenOrCreate);
+            file.Seek(0, SeekOrigin.End);
+            await file.WriteAsync(data);
         }
         public async Task StoreFile(string fileName, string data)
         {
-            await File.Create(Path.Combine(Directory.FullName, fileName)).WriteAsync(Encoding.UTF8.GetBytes(data));
+            await using var file = File.Open(Path.Combine(Directory.FullName, fileName), FileMode.OpenOrCreate);
+            file.Seek(0, SeekOrigin.End);
+            await file.WriteAsync(Encoding.UTF8.GetBytes(data));
         }
     }
 }

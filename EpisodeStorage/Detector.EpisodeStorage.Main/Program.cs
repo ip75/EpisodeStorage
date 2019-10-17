@@ -31,7 +31,6 @@ namespace Detector.EpisodeStorage.Main
                     services.Configure<Config>(hostContext.Configuration.GetSection("Lightener"));
                     services.Configure<Config>(hostContext.Configuration.GetSection("Transmitter"));
 
-                    //services.AddHostedService<GlobalSettingsStorage>();
                     services.AddSingleton<GlobalSettingsStorage>();
                     services.AddSingleton<ScreenShotDB.FileStorage>();
                     services.AddScoped<MessageProcessor>();
