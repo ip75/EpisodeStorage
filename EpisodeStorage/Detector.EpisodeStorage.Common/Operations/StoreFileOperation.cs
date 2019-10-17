@@ -1,4 +1,4 @@
-﻿namespace Detector.EpisodeStorage.Main.Operations
+﻿namespace Detector.EpisodeStorage.Common.Operations
 {
     public class StoreFileOperation : Operation
     {

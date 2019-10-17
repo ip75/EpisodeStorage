@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     for (auto update_nbr = 0; update_nbr < 100; update_nbr++) {
     	
         zmq::message_t command(msg.dump().data(), msg.dump().size()), result;
-	    //std::cout << "Sending file to server: " << msg["FileName"].get<std::string>() << std::endl;
+	    std::cout << "Sending file to server: " << msg["FileName"].get<std::string>() << std::endl;
 
     	command.set_routing_id(111);
     	command.set_group(ident);
