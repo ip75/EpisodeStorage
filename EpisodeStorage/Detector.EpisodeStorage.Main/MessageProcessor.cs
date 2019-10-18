@@ -13,10 +13,12 @@ namespace Detector.EpisodeStorage.Main
     public class MessageProcessor
     {
         private readonly FileStorage _fileStorage;
+        private readonly RSAProvider _rsaProvider;
 
-        public MessageProcessor(FileStorage fileStorage)
+        public MessageProcessor(FileStorage fileStorage, RSAProvider rsaProvider)
         {
             _fileStorage = fileStorage;
+            _rsaProvider = rsaProvider;
         }
 
         public async Task<string> ProcessMessage(ulong episodeId, string commandName, string message)
@@ -26,10 +28,19 @@ namespace Detector.EpisodeStorage.Main
                 switch (commandName)
                 {
                     case CommandNames.StoreFile:
-                        var directory = _fileStorage.CreateNewEventDirectory(episodeId, DateTime.Now);
-                        var operation = await JsonSerializer.DeserializeAsync<StoreFileOperation>(new MemoryStream(Encoding.UTF8.GetBytes(message)));
-                        await directory.StoreFile(operation.FileName, operation.Data);
-                        return JsonSerializer.Serialize(new OperationResult { Result = ErrorCodes.Success});
+                        var directory = _fileStorage.CreateOpenEventDirectory(episodeId, DateTime.Now);
+                        var store = await JsonSerializer.DeserializeAsync<StoreFileOperation>(new MemoryStream(Encoding.UTF8.GetBytes(message)));
+                        await directory.StoreFile(store.FileName, store.Data);
+                        return JsonSerializer.Serialize(new StoreFileOperationResult { Result = ErrorCodes.Success});
+
+                    case CommandNames.RetrieveFile:
+                        var retrieve = await JsonSerializer.DeserializeAsync<RetrieveFileOperation>(new MemoryStream(Encoding.UTF8.GetBytes(message)));
+                        directory = _fileStorage.CreateOpenEventDirectory(episodeId, retrieve.Datetime);
+                        var data = await directory.RetrieveFile(retrieve.FileName);
+                        return JsonSerializer.Serialize(new RetrieveFileOperationResult { Data = data, Result = ErrorCodes.Success});
+
+                    case CommandNames.GetPublicKey:
+                        return JsonSerializer.Serialize(new GetPublicKeyOperationResult { Key = _rsaProvider.PublicKey, Result = ErrorCodes.Success});
 
                     default:
                         throw DetectorException.CreateError(ErrorCodes.InvalidCommandName);

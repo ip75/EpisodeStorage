@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +25,16 @@ namespace Detector.EpisodeStorage.ScreenShotDB
             await using var file = File.Open(Path.Combine(Directory.FullName, fileName), FileMode.OpenOrCreate);
             file.Seek(0, SeekOrigin.End);
             await file.WriteAsync(Encoding.UTF8.GetBytes(data));
+        }
+
+        public async Task<byte[]> RetrieveFile(string fileName)
+        {
+            await using var file = File.Open(Path.Combine(Directory.FullName, fileName), FileMode.OpenOrCreate);
+            file.Seek(0, SeekOrigin.Begin);
+
+            var buffer = new byte[file.Length];
+            await file.ReadAsync(buffer);
+            return buffer;
         }
     }
 }

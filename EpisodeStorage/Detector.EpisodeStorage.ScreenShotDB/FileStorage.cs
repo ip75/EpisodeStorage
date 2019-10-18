@@ -1,34 +1,33 @@
 ﻿using Detector.EpisodeStorage.Common;
-using Detector.EpisodeStorage.DetectedDB;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Detector.Common;
 
 namespace Detector.EpisodeStorage.ScreenShotDB
 {
-    public class FileStorage
+    public class FileStorage: ICleaner
     {
         private readonly ILogger<FileStorage> _logger;
         private readonly IOptions<Config> _config;
-        private readonly GlobalSettingsStorage _storage;
         private const string DateDirectoryFormat = "yyyy.MM.dd";
         /// <summary>
         /// Root directory of file storage
         /// </summary>
-        private DirectoryInfo _root;
+        private readonly DirectoryInfo _root;
 
-        public FileStorage(ILogger<FileStorage> logger, IOptions<Config> config, GlobalSettingsStorage storage)
+        public FileStorage(ILogger<FileStorage> logger, IOptions<Config> config)
         {
             _logger = logger;
             _config = config;
-            _storage = storage;
+            KeepPeriod = TimeSpan.FromHours(config.Value.KeepPeriod);
             _root = new DirectoryInfo(_config.Value.RootDirectory);
         }
 
-        public EpisodeDirectory CreateNewEventDirectory(ulong episodeId, DateTime dateTime)
+        public EpisodeDirectory CreateOpenEventDirectory(ulong episodeId, DateTime dateTime)
         {
             var newEventDirectory = Path.Combine(
                 _root.FullName,
@@ -74,6 +73,12 @@ namespace Detector.EpisodeStorage.ScreenShotDB
             {
                 _logger.LogError($"Clean error: {ex}", new object[] {_root});
             }
+        }
+
+        public TimeSpan KeepPeriod { get; set; }
+        public void Clean()
+        {
+            Clean(KeepPeriod);
         }
     }
 }

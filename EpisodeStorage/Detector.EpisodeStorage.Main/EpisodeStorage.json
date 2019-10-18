@@ -5,7 +5,9 @@
     "KeepPeriod": 48, // in hours
     "CleanObsoleteFiles": true,
     "SignEnabled": false,
-    "KeyPath": "\\keys\\certificate_with_private.cer"
+    "KeyPath": "\\keys\\certificate_with_private.cer",
+    "DiskFreeSpaceQuota": 4096, // Disk free space quota (in kilobytes) 
+    "LighterEnabled": true 
   },
   "Transmitter": {
     "ZeroMQRouter": "@tcp://127.0.0.1:10000"

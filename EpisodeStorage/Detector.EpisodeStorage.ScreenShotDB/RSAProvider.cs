@@ -24,6 +24,8 @@ namespace Detector.EpisodeStorage.ScreenShotDB
             _enabled = _config.Value.SignEnabled;
         }
 
+        public byte [] PublicKey => _certificate?.PublicKey.Key.ExportSubjectPublicKeyInfo();
+
         public byte[] Sign(string textToSign)
         {
             _logger.Log(LogLevel.Debug, $"Sign message with key '{_certificate.Subject}' ...");
