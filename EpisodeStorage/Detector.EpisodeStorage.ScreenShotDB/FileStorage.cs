@@ -78,7 +78,8 @@ namespace Detector.EpisodeStorage.ScreenShotDB
         public TimeSpan KeepPeriod { get; set; }
         public void Clean()
         {
-            Clean(KeepPeriod);
+            if (_config.Value.CleanObsoleteFiles)
+                Clean(KeepPeriod);
         }
     }
 }

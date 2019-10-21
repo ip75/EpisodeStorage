@@ -12,6 +12,12 @@
         public int KeepPeriod { get; set; }
 
         /// <summary>
+        /// database section
+        /// </summary>
+        public string ProviderName { get; set; }
+        public string ConnectionString { get; set; }
+
+        /// <summary>
         /// Transceiver
         /// </summary>
         public string ZeroMQRouter { get; set; }

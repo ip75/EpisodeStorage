@@ -5,6 +5,7 @@ using Serilog;
 using System.Threading.Tasks;
 using Detector.EpisodeStorage.Common;
 using Detector.EpisodeStorage.DetectedDB;
+using Detector.EpisodeStorage.ScreenShotDB;
 
 namespace Detector.EpisodeStorage.Main
 {
@@ -18,6 +19,7 @@ namespace Detector.EpisodeStorage.Main
                     config.AddEnvironmentVariables();
 
                     config.AddJsonFile("EpisodeStorage.json", optional: true, reloadOnChange: true);
+                    config.AddJsonFile("db.providers.json");
 
                     if (args != null)
                     {
@@ -28,11 +30,13 @@ namespace Detector.EpisodeStorage.Main
                 {
                     services.AddOptions();
                     services.Configure<Config>(hostContext.Configuration.GetSection("Common"));
+                    services.Configure<Config>(hostContext.Configuration.GetSection("Database"));
                     services.Configure<Config>(hostContext.Configuration.GetSection("Lightener"));
                     services.Configure<Config>(hostContext.Configuration.GetSection("Transmitter"));
 
                     services.AddSingleton<GlobalSettingsStorage>();
                     services.AddSingleton<ScreenShotDB.FileStorage>();
+                    services.AddSingleton<RSAProvider>();
                     services.AddScoped<MessageProcessor>();
 
                     services.AddHostedService<Transceiver>();
