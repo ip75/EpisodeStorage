@@ -1,4 +1,3 @@
-using Detector.EpisodeStorage.DetectedDB;
 using Detector.EpisodeStorage.Main;
 using Detector.EpisodeStorage.ScreenShotDB;
 using Xunit;
@@ -14,7 +13,7 @@ namespace Detector.Tests
         public MessageProcessorTest(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
-            _processor = new MessageProcessor(new FileStorage(null, null, new GlobalSettingsStorage(null, null)));
+            _processor = new MessageProcessor(new FileStorage(null, null), new RSAProvider(null, null));
         }
         [Fact]
         public void ProcessMessage()
